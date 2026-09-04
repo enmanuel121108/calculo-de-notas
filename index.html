@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+  <meta charset="UTF-8">
+
+ 
+  <meta name="google-site-verification" content="cOKb12x381hdNRlFdHyaXY0sdqSmskuOGGIyoXKr34o">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Título principal para Google -->
+  <title>Cálculo de Notas | Calculadora de Promedio Académico en Línea</title>
+
+  <!-- Descripción principal de la web -->
+  <meta name="description" content="Calcula tu promedio de notas finales y calificaciones de manera fácil, rápida y gratuita. La herramienta ideal para estudiantes universitarios y escolares.">
+  <meta name="author" content="EnmanuelD">
+  <meta name="robots" content="index, follow">
+
+  <!-- URL Canónica -->
+  <link rel="canonical" href="https://calculo-de-notas-enmanueld.netlify.app/">
+
+  <!-- Open Graph (Tarjeta al compartir en WhatsApp, Facebook, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calculo-de-notas-enmanueld.netlify.app/">
+  <meta property="og:title" content="Cálculo de Notas | Calculadora de Promedio Académico">
+  <meta property="og:description" content="Calcula tu promedio de notas finales de manera rápida y gratuita.">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Cálculo de Notas | Calculadora de Promedio Académico">
+  <meta name="twitter:description" content="Calcula tu promedio de notas finales de manera rápida y gratuita.">
+
+
+
+
+
+
+
+    <link rel="icon" href="">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col justify-between antialiased selection:bg-indigo-500 selection:text-white">
+ <!--Si estas viendo esto me gustaria darte la bienvenida a mi segunda pagina web actualizada  hoy 31 de agosto de 2026,  me gustaria decirte que estoy en el trayecto 1 de informatica todo esto lo logre por mi cuenta y viendo tutoriales asi que si sabes mucho mas sobre esto podrias comunicarte conmigo para que me ayudes a mejorarla o si tienes alguna inquietud con ella-->
+    <!-- Modal de Bienvenida -->
+    <div id="welcome-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-slate-800 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl text-center space-y-4 transform transition-all scale-100">
+            <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mx-auto border border-indigo-500/30 shadow-lg">
+                <i data-lucide="sparkles" class="w-8 h-8"></i>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-white">¡Bienvenido a tu Gestor de Notas!</h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Plataforma integral para gestionar materias, registrar evaluaciones, simular proyecciones, exportar tus resultados en PDF y compartirlos.
+            </p>
+            <button onclick="cerrarBienvenida()" class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-medium py-2.5 px-4 rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-sm sm:text-base">
+                <i data-lucide="rocket" class="w-4 h-4"></i> Comenzar a Usar
+            </button>
+        </div>
+    </div>
+
+    <!-- Encabezado adaptable con Menú Desplegable (Hamburguesa) -->
+    <header class="py-3 sm:py-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="bg-indigo-600 p-2 sm:p-2.5 rounded-xl text-white shadow-lg shadow-indigo-500/30 flex-shrink-0">
+                    <i data-lucide="calculator" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-2xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
+                        Calculadora de Notas
+                    </h1>
+                    <span class="text-[10px] sm:text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full font-medium inline-block mt-0.5">
+                        Escala 0 - 20
+                    </span>
+                </div>
+            </div>
+
+            <!-- Botón de Menú y Menú Desplegable Móvil/Desktop -->
+            <div class="relative">
+                <button id="btn-menu" onclick="toggleMenu()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 p-2 sm:p-2.5 rounded-xl border border-slate-700/80 transition-all shadow-md flex items-center justify-center">
+                    <i data-lucide="menu" class="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400"></i>
+                </button>
+
+                <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 sm:w-56 bg-slate-800/95 border border-slate-700/80 rounded-2xl shadow-2xl backdrop-blur-md z-50 p-2 space-y-1">
+                    <button onclick="ejecutarOpcion('dashboard')" class="w-full text-left bg-transparent hover:bg-slate-700/60 active:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition-all">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-indigo-400"></i> Principal
+                    </button>
+                    <button onclick="ejecutarOpcion('presentacion')" class="w-full text-left bg-transparent hover:bg-slate-700/60 active:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition-all">
+                        <i data-lucide="camera" class="w-4 h-4 text-cyan-400"></i> Vista Foto
+                    </button>
+                    <button onclick="ejecutarOpcion('pdf')" class="w-full text-left bg-transparent hover:bg-slate-700/60 active:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition-all">
+                        <i data-lucide="file-down" class="w-4 h-4 text-emerald-400"></i> Descargar PDF
+                    </button>
+                    <button onclick="ejecutarOpcion('compartir')" class="w-full text-left bg-transparent hover:bg-slate-700/60 active:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition-all">
+                        <i data-lucide="share-2" class="w-4 h-4 text-amber-400"></i> Compartir
+                    </button>
+                    <div class="border-t border-slate-700/60 my-1"></div>
+                    <button onclick="ejecutarOpcion('borrar')" class="w-full text-left bg-rose-950/30 hover:bg-rose-900/50 active:bg-rose-900/70 text-rose-300 text-xs sm:text-sm font-semibold px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition-all">
+                        <i data-lucide="trash-2" class="w-4 h-4 text-rose-400"></i> Borrar Todo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-6xl mx-auto px-3 sm:px-4 py-6 sm:py-8 w-full flex-grow space-y-6 sm:space-y-8">
+
+        <!-- DASHBOARD -->
+        <div id="vista-dashboard" class="space-y-6 sm:space-y-8">
+            <section class="bg-slate-800/60 rounded-2xl p-4 sm:p-6 border border-slate-700/50 shadow-xl backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 sm:mb-6">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-semibold flex items-center gap-2 text-white">
+                            <i data-lucide="folder-kanban" class="w-5 h-5 text-indigo-400"></i> Materias & Seleccionador
+                        </h2>
+                        <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Administra tus asignaturas y cambia entre ellas para ver sus notas.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <input type="text" id="nueva-materia-input" placeholder="Nombre de materia..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-200 focus:border-indigo-500 focus:outline-none flex-grow md:w-48">
+                        <button onclick="agregarMateria()" class="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs sm:text-sm px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-indigo-600/20">
+                            <i data-lucide="folder-plus" class="w-4 h-4"></i> Crear
+                        </button>
+                    </div>
+                </div>
+
+                <div id="contenedor-materias" class="flex flex-wrap gap-2 pt-2 border-t border-slate-700/50">
+                    <!-- Dinámico -->
+                </div>
+            </section>
+
+            <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+                <section class="md:col-span-2 space-y-6">
+                    <div class="bg-slate-800/60 rounded-2xl p-4 sm:p-6 border border-slate-700/50 shadow-xl backdrop-blur-sm">
+                        <div class="flex justify-between items-center mb-4 sm:mb-6">
+                            <div>
+                                <h2 class="text-base sm:text-lg font-semibold flex items-center gap-2 text-white" id="titulo-materia-activa">
+                                    <i data-lucide="book-open" class="w-5 h-5 text-indigo-400"></i> Evaluaciones
+                                </h2>
+                            </div>
+                            <button onclick="agregarFila()" class="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-indigo-600/20">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Agregar Nota
+                            </button>
+                        </div>
+
+                        <!-- Tabla con scroll horizontal optimizado para teléfono -->
+                        <div class="overflow-x-auto -mx-2 sm:mx-0">
+                            <table class="w-full text-left border-collapse min-w-[300px]">
+                                <thead>
+                                    <tr class="text-[11px] sm:text-xs text-slate-400 border-b border-slate-700">
+                                        <th class="pb-3 font-medium">Evaluación</th>
+                                        <th class="pb-3 font-medium w-24 sm:w-28 text-center">Nota (0-20)</th>
+                                        <th class="pb-3 font-medium w-20 sm:w-28 text-center">Peso (%)</th>
+                                        <th class="pb-3 font-medium w-10 text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-notas" class="divide-y divide-slate-700/50">
+                                    <!-- Filas dinámicas -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="panel-simulador" class="bg-slate-800/40 rounded-2xl p-4 sm:p-6 border border-slate-700/40 hidden">
+                        <h3 class="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <i data-lucide="target" class="w-4 h-4"></i> Proyección para Aprobar (Mínimo 10)
+                        </h3>
+                        <p id="texto-simulador" class="text-xs sm:text-sm text-slate-300">
+                            Calculando requerimientos...
+                        </p>
+                    </div>
+                </section>
+
+                <section class="space-y-6">
+                    <div class="bg-slate-800/60 rounded-2xl p-5 sm:p-6 border border-slate-700/50 shadow-xl backdrop-blur-sm sticky top-24 text-center">
+                        <h3 class="text-xs sm:text-sm font-medium text-slate-400 mb-4 uppercase tracking-wider">Nota Acumulada</h3>
+                        
+                        <div class="relative w-32 h-32 sm:w-36 sm:h-36 mx-auto flex items-center justify-center mb-4">
+                            <div id="ring-status" class="w-full h-full rounded-full border-8 border-slate-700 transition-all duration-500 flex items-center justify-center flex-col">
+                                <span id="promedio-final" class="text-3xl sm:text-4xl font-extrabold text-white">0.0</span>
+                                <span class="text-[10px] sm:text-xs text-slate-400">/ 20 pts</span>
+                            </div>
+                        </div>
+
+                        <div id="badge-estado" class="inline-block px-3.5 py-1 rounded-full text-xs sm:text-sm font-semibold mb-5 transition-all bg-slate-700 text-slate-300">
+                            Ingresa tus notas
+                        </div>
+
+                        <div class="space-y-3 text-xs sm:text-sm text-left border-t border-slate-700/60 pt-4">
+                            <div class="flex justify-between items-center text-slate-300">
+                                <span>Ponderación Total:</span>
+                                <span id="total-peso" class="font-bold text-indigo-400">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                                <div id="barra-peso" class="bg-indigo-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+
+                            <div class="flex justify-between items-center text-slate-300 pt-1">
+                                <span>Promedio Evaluado:</span>
+                                <span id="promedio-evaluado" class="font-semibold text-slate-200">0.0 / 20</span>
+                            </div>
+                        </div>
+
+                        <div id="alerta-sugerencia" class="mt-5 p-3 sm:p-4 rounded-xl text-[11px] sm:text-xs text-slate-300 bg-slate-900/50 border border-slate-700 flex items-start gap-2 text-left">
+                            <i data-lucide="info" class="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5"></i>
+                            <span id="texto-sugerencia">Completa las notas y ponderaciones para calcular tu estatus.</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="bg-slate-800/60 rounded-2xl p-4 sm:p-6 border border-slate-700/50 shadow-xl backdrop-blur-sm space-y-6">
+                <div>
+                    <h2 class="text-base sm:text-lg font-semibold flex items-center gap-2 text-white">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5 text-indigo-400"></i> Cuadro Comparativo de Materias
+                    </h2>
+                    <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Comparación gráfica y detallada del rendimiento acumulado.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-6 items-center">
+                    <div class="lg:col-span-1 bg-slate-900/80 p-3 sm:p-4 rounded-xl border border-slate-700/60 h-56 sm:h-64 flex items-center justify-center">
+                        <canvas id="graficoComparativo"></canvas>
+                    </div>³
+
+                    <div class="lg:col-span-2 overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[400px]">
+                            <thead>
+                                <tr class="text-[11px] sm:text-xs text-slate-400 border-b border-slate-700">
+                                    <th class="pb-3 font-medium">Materia</th>
+                                    <th class="pb-3 font-medium text-center">Evaluaciones</th>
+                                    <th class="pb-3 font-medium text-center">Ponderación Total</th>
+                                    <th class="pb-3 font-medium text-center">Nota Acumulada</th>
+                                    <th class="pb-3 font-medium text-center">Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-comparativa-body" class="divide-y divide-slate-700/50 text-xs sm:text-sm">
+                                <!-- Dinámico -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- VISTA MODO FOTO / REPORTES -->
+        <div id="vista-presentacion" class="hidden bg-slate-800/80 p-4 sm:p-8 rounded-2xl border border-slate-700/60 shadow-2xl space-y-6 max-w-4xl mx-auto backdrop-blur-sm">
+            <div class="border-b border-slate-700 pb-4 text-center">
+                <h2 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">Reporte Académico General</h2>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Resumen estructurado de tus calificaciones acumuladas y ponderaciones</p>
+            </div>
+
+            <div id="contenedor-reporte-detallado" class="space-y-4 sm:space-y-6">
+                <!-- Dinámico -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Pie de Página con tus Contactos -->
+    <footer class="py-6 text-center text-[11px] sm:text-xs text-slate-400 border-t border-slate-800 bg-slate-900/60 backdrop-blur">
+        <div class="max-w-6xl mx-auto px-4 space-y-3">
+            <p class="font-medium text-slate-300">Desarrollado con ❤️ por <span class="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent font-bold">Enmanuel D.</span></p>
+            <div class="flex flex-wrap justify-center items-center gap-2 sm:gap-4 text-slate-400 pt-1">
+                <a href="enmanueldm2008@gmail.com" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60">
+                    <i data-lucide="mail" class="w-3.5 h-3.5 text-indigo-400"></i> enmanueldm2008@gmail.com
+                </a>
+                <a href="https://github.com/enmanuel121108" target="_blank" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60">
+                    <i data-lucide="github" class="w-3.5 h-3.5 text-cyan-400"></i> GitHub
+                </a>
+                <a href="04242563514" target="_blank" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60">
+                    <i data-lucide="telefone" class="w-3.5 h-3.5 text-indigo-400"></i>  Numero Telefónico
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script JavaScript Completo -->
+    <script>
+        const CLAVE_STORAGE = 'mis_materias_calculadora_v1';
+
+        let materiasIniciales = [
+            {
+                id: 'mat_1',
+                nombre: 'Matemáticas',
+                evaluaciones: [
+                    { nombre: 'Parcial 1', nota: 15, peso: 30 },
+                    { nombre: 'Parcial 2', nota: 14, peso: 30 },
+                    { nombre: 'Proyecto Final', nota: 0, peso: 40 }
+                ]
+            },
+            {
+                id: 'mat_2',
+                nombre: 'Física',
+                evaluaciones: [
+                    { nombre: 'Laboratorio 1', nota: 18, peso: 25 },
+                    { nombre: 'Examen Teórico', nota: 12, peso: 35 },
+                    { nombre: 'Trabajo Práctico', nota: 16, peso: 40 }
+                ]
+            },
+            {
+                id: 'mat_3',
+                nombre: 'Programación',
+                evaluaciones: [
+                    { nombre: 'Quiz 1', nota: 20, peso: 20 },
+                    { nombre: 'Proyecto 1', nota: 19, peso: 40 },
+                    { nombre: 'Examen Final', nota: 17, peso: 40 }
+                ]
+            }
+        ];
+
+        let materias = cargarDatos();
+        let materiaActivaId = materias.length > 0 ? materias[0].id : '';
+        let yaFestejo = false;
+        let chartInstance = null;
+
+        // Lógica del Menú Desplegable
+        function toggleMenu() {
+            const menu = document.getElementById('dropdown-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function ejecutarOpcion(accion) {
+            const menu = document.getElementById('dropdown-menu');
+            menu.classList.add('hidden');
+            if (accion === 'dashboard') mostrarVista('dashboard');
+            if (accion === 'presentacion') mostrarVista('presentacion');
+            if (accion === 'pdf') descargarPDF();
+            if (accion === 'compartir') compartirWeb();
+            if (accion === 'borrar') borrarTodosLosDatos();
+        }
+
+        // Cerrar menú al hacer clic fuera de él
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('dropdown-menu');
+            const btn = document.getElementById('btn-menu');
+            if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        function guardarDatos() {
+            localStorage.setItem(CLAVE_STORAGE, JSON.stringify(materias));
+        }
+
+        function cargarDatos() {
+            const guardados = localStorage.getItem(CLAVE_STORAGE);
+            return guardados ? JSON.parse(guardados) : materiasIniciales;
+        }
+
+        function cerrarBienvenida() {
+            const modal = document.getElementById('welcome-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => modal.remove(), 300);
+        }
+
+        function mostrarVista(vista) {
+            const dashboard = document.getElementById('vista-dashboard');
+            const presentacion = document.getElementById('vista-presentacion');
+
+            if (vista === 'dashboard') {
+                dashboard.classList.remove('hidden');
+                presentacion.classList.add('hidden');
+            } else if (vista === 'presentacion') {
+                generarVistaPresentacion();
+                dashboard.classList.add('hidden');
+                presentacion.classList.remove('hidden');
+            }
+        }
+
+        function renderizarMenuMaterias() {
+            const contenedor = document.getElementById('contenedor-materias');
+            contenedor.innerHTML = '';
+
+            materias.forEach(materia => {
+                const esActiva = materia.id === materiaActivaId;
+                const btn = document.createElement('div');
+                btn.className = `flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer border ${
+                    esActiva 
+                        ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/30' 
+                        : 'bg-slate-900/60 text-slate-300 border-slate-700/60 hover:bg-slate-700/40'
+                }`;
+
+                btn.onclick = () => cambiarMateria(materia.id);
+                btn.innerHTML = `
+                    <span>${materia.nombre}</span>
+                    ${materias.length > 1 ? `
+                        <button onclick="event.stopPropagation(); eliminarMateria('${materia.id}')" class="text-slate-400 hover:text-rose-400 transition-colors p-0.5 rounded">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        </button>
+                    ` : ''}
+                `;
+                contenedor.appendChild(btn);
+            });
+
+            const materiaActiva = materias.find(m => m.id === materiaActivaId);
+            if (materiaActiva) {
+                document.getElementById('titulo-materia-activa').innerHTML = `
+                    <i data-lucide="book-open" class="w-5 h-5 text-indigo-400"></i> Evaluaciones: <span class="text-indigo-300 ml-1">${materiaActiva.nombre}</span>
+                `;
+            }
+
+            lucide.createIcons();
+        }
+
+        function agregarMateria() {
+            const input = document.getElementById('nueva-materia-input');
+            const nombre = input.value.trim();
+            if (!nombre) return;
+
+            const nuevaId = 'mat_' + Date.now();
+            materias.push({
+                id: nuevaId,
+                nombre: nombre,
+                evaluaciones: [
+                    { nombre: 'Evaluación 1', nota: 0, peso: 50 },
+                    { nombre: 'Evaluación 2', nota: 0, peso: 50 }
+                ]
+            });
+
+            input.value = '';
+            materiaActivaId = nuevaId;
+            guardarDatos();
+            renderizarTodo();
+        }
+
+        function eliminarMateria(id) {
+            if (materias.length <= 1) return;
+            materias = materias.filter(m => m.id !== id);
+            if (materiaActivaId === id) {
+                materiaActivaId = materias[0].id;
+            }
+            guardarDatos();
+            renderizarTodo();
+        }
+
+        function cambiarMateria(id) {
+            materiaActivaId = id;
+            yaFestejo = false;
+            renderizarTodo();
+        }
+
+        function renderizarFilas() {
+            const tbody = document.getElementById('lista-notas');
+            tbody.innerHTML = '';
+
+            const materia = materias.find(m => m.id === materiaActivaId);
+            if (!materia) return;
+
+            materia.evaluaciones.forEach((item, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = "group hover:bg-slate-700/20 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-2.5 sm:py-3 pr-2">
+                        <input type="text" value="${item.nombre}" onchange="actualizarDato(${idx}, 'nombre', this.value)" 
+                            class="bg-transparent text-slate-200 border-none focus:outline-none focus:ring-1 focus:ring-indigo-500 rounded px-1.5 py-1 w-full text-xs sm:text-sm font-medium">
+                    </td>
+                    <td class="py-2.5 sm:py-3 pr-2">
+                        <input type="number" min="0" max="20" step="0.5" value="${item.nota}" oninput="actualizarDato(${idx}, 'nota', parseFloat(this.value) || 0)" 
+                            class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 sm:py-1.5 w-full text-xs sm:text-sm text-center focus:border-indigo-500 focus:outline-none transition-colors">
+                    </td>
+                    <td class="py-2.5 sm:py-3 pr-2">
+                        <input type="number" min="0" max="100" value="${item.peso}" oninput="actualizarDato(${idx}, 'peso', parseFloat(this.value) || 0)" 
+                            class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 sm:py-1.5 w-full text-xs sm:text-sm text-center focus:border-indigo-500 focus:outline-none transition-colors">
+                    </td>
+                    <td class="py-2.5 sm:py-3 text-center">
+                        <button onclick="eliminarFila(${idx})" class="text-slate-500 hover:text-rose-400 transition-colors p-1">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+            calcularResultados();
+        }
+
+        function agregarFila() {
+            const materia = materias.find(m => m.id === materiaActivaId);
+            if (!materia) return;
+            materia.evaluaciones.push({ nombre: `Evaluación ${materia.evaluaciones.length + 1}`, nota: 0, peso: 10 });
+            guardarDatos();
+            renderizarFilas();
+        }
+
+        function eliminarFila(index) {
+            const materia = materias.find(m => m.id === materiaActivaId);
+            if (!materia) return;
+            materia.evaluaciones.splice(index, 1);
+            guardarDatos();
+            renderizarFilas();
+        }
+
+        function actualizarDato(index, campo, valor) {
+            const materia = materias.find(m => m.id === materiaActivaId);
+            if (!materia) return;
+
+            if (campo === 'nota') valor = Math.max(0, Math.min(20, valor));
+            if (campo === 'peso') valor = Math.max(0, Math.min(100, valor));
+            
+            materia.evaluaciones[index][campo] = valor;
+            guardarDatos();
+            calcularResultados();
+        }
+
+        function calcularResultados() {
+            const materia = materias.find(m => m.id === materiaActivaId);
+            if (!materia) return;
+
+            let notaAcumulada = 0;
+            let totalPeso = 0;
+
+            materia.evaluaciones.forEach(item => {
+                notaAcumulada += (item.nota * (item.peso / 100));
+                totalPeso += item.peso;
+            });
+
+            let notaFinalReal = notaAcumulada;
+            if (notaAcumulada >= 9.5 && notaAcumulada < 10) {
+                notaFinalReal = 10;
+            }
+
+            document.getElementById('promedio-final').innerText = notaFinalReal.toFixed(1);
+            document.getElementById('total-peso').innerText = `${totalPeso}%`;
+
+            const promedioEvaluadoVal = totalPeso > 0 ? (notaAcumulada / (totalPeso / 100)) : 0;
+            document.getElementById('promedio-evaluado').innerText = `${promedioEvaluadoVal.toFixed(1)} / 20`;
+
+            const barraPeso = document.getElementById('barra-peso');
+            barraPeso.style.width = `${Math.min(totalPeso, 100)}%`;
+            
+            if (totalPeso === 100) {
+                barraPeso.className = "bg-emerald-500 h-2 rounded-full transition-all duration-300";
+            } else if (totalPeso > 100) {
+                barraPeso.className = "bg-rose-500 h-2 rounded-full transition-all duration-300";
+            } else {
+                barraPeso.className = "bg-indigo-500 h-2 rounded-full transition-all duration-300";
+            }
+
+            const ring = document.getElementById('ring-status');
+            const badge = document.getElementById('badge-estado');
+            const sugerencia = document.getElementById('texto-sugerencia');
+
+            if (notaFinalReal >= 10) {
+                ring.className = "w-full h-full rounded-full border-8 border-emerald-500/80 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-500 flex items-center justify-center flex-col";
+                badge.className = "inline-block px-3.5 py-1 rounded-full text-xs sm:text-sm font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                badge.innerText = "¡Aprobado!";
+                sugerencia.innerText = totalPeso >= 100 
+                    ? "¡Felicidades! Has completado el plan evaluativo y aprobado esta asignatura." 
+                    : "Has alcanzado la nota mínima necesaria para aprobar la materia.";
+
+                if (!yaFestejo && totalPeso >= 100) {
+                    confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+                    yaFestejo = true;
+                }
+            } else if (notaAcumulada >= 7) {
+                ring.className = "w-full h-full rounded-full border-8 border-amber-500/80 shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-500 flex items-center justify-center flex-col";
+                badge.className = "inline-block px-3.5 py-1 rounded-full text-xs sm:text-sm font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30";
+                badge.innerText = "En Riesgo";
+                sugerencia.innerText = "Estás cerca de aprobar. Revisa el simulador para saber cuánto necesitas sacar.";
+                yaFestejo = false;
+            } else {
+                ring.className = "w-full h-full rounded-full border-8 border-rose-500/80 shadow-[0_0_20px_rgba(244,63,94,0.3)] transition-all duration-500 flex items-center justify-center flex-col";
+                badge.className = "inline-block px-3.5 py-1 rounded-full text-xs sm:text-sm font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                badge.innerText = "Reprobado";
+                sugerencia.innerText = "Tu promedio acumulado no alcanza la nota de aprobación mínima (10/20).";
+                yaFestejo = false;
+            }
+
+            actualizarSimulador(notaAcumulada, totalPeso);
+            actualizarCuadroComparativo();
+        }
+
+        function actualizarSimulador(acumulado, totalPeso) {
+            const panel = document.getElementById('panel-simulador');
+            const texto = document.getElementById('texto-simulador');
+            const pesoRestante = 100 - totalPeso;
+
+            if (pesoRestante <= 0) {
+                panel.classList.add('hidden');
+                return;
+            }
+
+            panel.classList.remove('hidden');
+            const puntosFaltantes = 10 - acumulado;
+
+            if (puntosFaltantes <= 0) {
+                texto.innerHTML = `<span class="text-emerald-400 font-semibold">¡Ya aprobaste!</span> Cuentas con un <span class="font-bold text-white">${pesoRestante}%</span> restante para incrementar tu promedio final.`;
+            } else {
+                const notaNecesaria = (puntosFaltantes / (pesoRestante / 100));
+                if (notaNecesaria > 20) {
+                    texto.innerHTML = `Necesitas <span class="text-rose-400 font-bold">${notaNecesaria.toFixed(1)} pts</span> en el <span class="font-bold text-white">${pesoRestante}%</span> restante. Supera el máximo de 20 pts posibles.`;
+                } else {
+                    texto.innerHTML = `Para alcanzar el mínimo aprobatorio (10 pts), necesitas promediar al menos <span class="text-indigo-400 font-bold text-sm sm:text-base">${notaNecesaria.toFixed(1)} / 20</span> en el <span class="font-bold text-white">${pesoRestante}%</span> restante evaluativo.`;
+                }
+            }
+        }
+
+        function actualizarCuadroComparativo() {
+            const tbody = document.getElementById('tabla-comparativa-body');
+            tbody.innerHTML = '';
+
+            const nombres = [];
+            const promedios = [];
+            const colores = [];
+
+            materias.forEach(mat => {
+                let acumulado = 0;
+                let peso = 0;
+                mat.evaluaciones.forEach(e => {
+                    acumulado += (e.nota * (e.peso / 100));
+                    peso += e.peso;
+                });
+
+                if (acumulado >= 9.5 && acumulado < 10) acumulado = 10;
+
+                let estatusHtml = '';
+                let colorHex = '#6366f1';
+
+                if (acumulado >= 10) {
+                    estatusHtml = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-medium">Aprobado</span>`;
+                    colorHex = '#10b981';
+                } else if (acumulado >= 7) {
+                    estatusHtml = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-medium">En Riesgo</span>`;
+                    colorHex = '#f59e0b';
+                } else {
+                    estatusHtml = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-medium">Reprobado</span>`;
+                    colorHex = '#f43f5e';
+                }
+
+                nombres.push(mat.nombre);
+                promedios.push(parseFloat(acumulado.toFixed(1)));
+                colores.push(colorHex);
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-700/20 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-2.5 sm:py-3 font-semibold text-slate-200">${mat.nombre}</td>
+                    <td class="py-2.5 sm:py-3 text-center text-slate-300">${mat.evaluaciones.length}</td>
+                    <td class="py-2.5 sm:py-3 text-center text-slate-300">${peso}%</td>
+                    <td class="py-2.5 sm:py-3 text-center font-bold text-white">${acumulado.toFixed(1)} / 20</td>
+                    <td class="py-2.5 sm:py-3 text-center">${estatusHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const ctx = document.getElementById('graficoComparativo').getContext('2d');
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: nombres,
+                    datasets: [{
+                        label: 'Nota Acumulada',
+                        data: promedios,
+                        backgroundColor: colores,
+                        borderRadius: 8,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 20,
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        },
+                        x: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generarVistaPresentacion() {
+            const contenedor = document.getElementById('contenedor-reporte-detallado');
+            contenedor.innerHTML = '';
+
+            materias.forEach(mat => {
+                let acumulado = 0;
+                let pesoTotal = 0;
+
+                const filasEval = mat.evaluaciones.map(e => {
+                    acumulado += (e.nota * (e.peso / 100));
+                    pesoTotal += e.peso;
+                    return `
+                        <tr class="border-b border-slate-700/40 text-[11px] sm:text-xs">
+                            <td class="py-2 text-slate-300">${e.nombre}</td>
+                            <td class="py-2 text-center font-semibold text-slate-200">${e.nota} / 20</td>
+                            <td class="py-2 text-center text-slate-400">${e.peso}%</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                if (acumulado >= 9.5 && acumulado < 10) acumulado = 10;
+
+                const bloque = document.createElement('div');
+                bloque.className = "bg-slate-900/90 border border-slate-700/60 rounded-xl p-4 sm:p-5 space-y-3 shadow-lg";
+                bloque.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                        <h3 class="font-bold text-indigo-300 text-sm sm:text-base">${mat.nombre}</h3>
+                        <span class="font-bold text-xs sm:text-sm px-2.5 py-1 rounded-full ${
+                            acumulado >= 10 
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
+                                : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                        }">
+                            ${acumulado.toFixed(1)} / 20 (${pesoTotal}%)
+                        </span>
+                    </div>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-[10px] sm:text-[11px] uppercase text-slate-400 border-b border-slate-700/60">
+                                <th class="pb-2 font-medium">Evaluación</th>
+                                <th class="pb-2 font-medium text-center">Nota</th>
+                                <th class="pb-2 font-medium text-center">Peso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filasEval}
+                        </tbody>
+                    </table>
+                `;
+                contenedor.appendChild(bloque);
+            });
+        }
+
+        function borrarTodosLosDatos() {
+            if (confirm('¿Estás seguro de que deseas eliminar TODAS las materias y notas guardadas?')) {
+                localStorage.removeItem(CLAVE_STORAGE);
+                materias = [];
+                materiaActivaId = '';
+                renderizarTodo();
+            }
+        }
+
+        function descargarPDF() {
+            mostrarVista('presentacion');
+            const elemento = document.getElementById('vista-presentacion');
+            
+            const opciones = {
+                margin: 8,
+                filename: 'Reporte_Notas_Academico.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opciones).from(elemento).save();
+        }
+
+        async function compartirWeb() {
+            const totalMaterias = materias.length;
+            const textoCompartir = `¡Revisa mi avance académico!\nTengo ${totalMaterias} materias registradas.\nHerramienta: ${window.location.href}`;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Mi Rendimiento Académico',
+                        text: textoCompartir,
+                        url: window.location.href
+                    });
+                } catch (err) {
+                    console.log('Error al compartir:', err);
+                }
+            } else {
+                navigator.clipboard.writeText(textoCompartir);
+                alert('¡Enlace y resumen copiados al portapapeles!');
+            }
+        }
+
+        function renderizarTodo() {
+            renderizarMenuMaterias();
+            renderizarFilas();
+        }
+
+        renderizarTodo();
+    </script>
+</body>
+</html>

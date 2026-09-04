@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://calculo-de-notas-enmanueld.netlify.app/sitemap.xml
